@@ -48,6 +48,8 @@ var i18n = {
     p6_sect2: "PLACEHOLDER",
     link_source: "source",
     link_github: "GitHub",
+    aria_zoom: "Enlarge image",
+    aria_close: "Close",
     about_p1: `I'm a computer science student who spends most of my free time in C++ — usually somewhere between the hardware and the application, where things are either drivers or audio. I like projects that force me to actually understand what's happening underneath, rather than trusting a library to handle it.`,
     about_p2: `Outside of code, I'm slowly getting better at admitting when a project didn't turn out the way I planned — most of the ones above are examples of that.`,
     footer: "built with plain html & css · catppuccin mocha",
@@ -100,6 +102,8 @@ var i18n = {
     p6_sect2: "PLACEHOLDER",
     link_source: "quellcode",
     link_github: "GitHub",
+    aria_zoom: "Bild vergrößern",
+    aria_close: "Schließen",
     about_p1: `Ich studiere Informatik und verbringe die meiste Freizeit mit C++ — meist irgendwo zwischen Hardware und Anwendung, bei Treibern oder Audio. Ich mag Projekte, bei denen ich wirklich verstehen muss, was darunter passiert, statt einer Bibliothek blind zu vertrauen.`,
     about_p2: `Abseits von Code werde ich langsam besser darin, zuzugeben, wenn ein Projekt nicht so gelaufen ist wie geplant — die meisten oben sind Beispiele dafür.`,
     footer: "gebaut mit reinem html & css · catppuccin mocha",
@@ -124,6 +128,10 @@ var i18n = {
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
       if (dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+      var key = el.getAttribute("data-i18n-aria");
+      if (dict[key] !== undefined) el.setAttribute("aria-label", dict[key]);
     });
     root.setAttribute("lang", lang);
     langButtons.forEach(function (btn) {
@@ -152,4 +160,90 @@ var i18n = {
   });
 
   applyLang("de");
+})();
+
+(function () {
+  var root = document.documentElement;
+
+  function currentLang() {
+    return root.getAttribute("lang") || "de";
+  }
+
+  function label(key) {
+    var dict = i18n[currentLang()] || i18n.en;
+    return dict[key] || "";
+  }
+
+  // Build the lightbox overlay once and reuse it for every preview image.
+  var overlay = document.createElement("div");
+  overlay.className = "lightbox";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-hidden", "true");
+  overlay.innerHTML =
+    '<figure class="lightbox-figure">' +
+    '<img class="lightbox-img" src="" alt="" />' +
+    '<button type="button" class="lightbox-close" data-i18n-aria="aria_close" aria-label="Close">' +
+    '<svg class="icon"><use href="#icon-close" /></svg>' +
+    "</button>" +
+    "</figure>";
+  document.body.appendChild(overlay);
+
+  var overlayImg = overlay.querySelector(".lightbox-img");
+  var closeButton = overlay.querySelector(".lightbox-close");
+
+  var lastFocused = null;
+
+  function open(figure) {
+    var img = figure.querySelector("img");
+    if (!img) return;
+    overlayImg.src = img.currentSrc || img.src;
+    overlayImg.alt = img.alt;
+    lastFocused = document.activeElement;
+    overlay.setAttribute("aria-hidden", "false");
+    overlay.classList.add("open");
+    document.body.classList.add("lightbox-open");
+    closeButton.focus();
+  }
+
+  function close() {
+    if (!overlay.classList.contains("open")) return;
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("lightbox-open");
+    if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+  }
+
+  // Add a small "enlarge" button to the top-right of every preview.
+  document.querySelectorAll(".project-preview").forEach(function (figure) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "preview-zoom";
+    btn.setAttribute("data-i18n-aria", "aria_zoom");
+    btn.setAttribute("aria-label", label("aria_zoom"));
+    btn.innerHTML = '<svg class="icon"><use href="#icon-expand" /></svg>';
+    btn.addEventListener("click", function () {
+      open(figure);
+    });
+    figure.appendChild(btn);
+  });
+
+  // Localize the close button label for the current language on load.
+  overlay.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+    el.setAttribute("aria-label", label(el.getAttribute("data-i18n-aria")));
+  });
+
+  // A click on the backdrop closes; clicks starting on the close button don't.
+  overlay.addEventListener("click", function (e) {
+    if (e.target.closest(".lightbox-close")) return;
+    close();
+  });
+
+  closeButton.addEventListener("click", function () {
+    close();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") close();
+  });
 })();
