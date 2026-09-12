@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lunix — Computer Science · C++ · Open Source · Systems</title>
+<meta name="description" content="Lunix — systems programmer working on drivers, audio DSP, and small tools.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* Catppuccin Mocha */
+    --base: #1e1e2e;
+    --mantle: #181825;
+    --crust: #11111b;
+    --text: #cdd6f4;
+    --subtext1: #bac2de;
+    --subtext0: #a6adc8;
+    --overlay1: #7f849c;
+    --overlay0: #6c7086;
+    --surface1: #45475a;
+    --surface0: #313244;
+    --mauve: #cba6f7;
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --peach: #fab387;
+    --red: #f38ba8;
+    --teal: #94e2d5;
+    --yellow: #f9e2af;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--base);
+    color: var(--text);
+    font-family: 'Google Sans Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--mauve);
+    color: var(--crust);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 6rem;
+  }
+
+  /* ---------- header ---------- */
+
+  .prompt {
+    color: var(--overlay0);
+    font-size: 0.85rem;
+    margin: 0 0 0.35rem;
+  }
+
+  h1.name {
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .role-line {
+    color: var(--subtext0);
+    font-size: 0.95rem;
+    margin: 0.6rem 0 0;
+  }
+
+  .role-line span { color: var(--overlay0); }
+
+  .intro {
+    margin-top: 1.8rem;
+    color: var(--subtext1);
+    font-size: 0.95rem;
+    max-width: 56ch;
+  }
+
+  .social-row {
+    display: flex;
+    gap: 1.1rem;
+    margin-top: 1.6rem;
+  }
+
+  .social-row a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--overlay0);
+    font-size: 0.85rem;
+    transition: color 0.15s ease;
+  }
+
+  .social-row a:hover { color: var(--mauve); }
+
+  .social-row svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ---------- sections ---------- */
+
+  section {
+    margin-top: 4.5rem;
+  }
+
+  .section-title {
+    font-size: 0.8rem;
+    color: var(--overlay0);
+    margin: 0 0 1.6rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .section-title::before {
+    content: attr(data-glyph);
+    color: var(--surface1);
+  }
+
+  .section-title-text {
+    color: var(--subtext0);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  /* ---------- projects ---------- */
+
+  .project {
+    border-top: 1px solid var(--surface0);
+    padding: 1.6rem 0;
+  }
+
+  .project:last-child {
+    border-bottom: 1px solid var(--surface0);
+  }
+
+  .project-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .project-head::-webkit-details-marker { display: none; }
+
+  .project-num {
+    font-size: 0.85rem;
+    color: var(--accent, var(--mauve));
+    padding-top: 0.15rem;
+    flex-shrink: 0;
+    width: 1.6rem;
+  }
+
+  .project-main { flex: 1; min-width: 0; }
+
+  .project-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .project-title {
+    font-size: 1.02rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .chev {
+    width: 14px;
+    height: 14px;
+    color: var(--overlay0);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  details[open] .chev { transform: rotate(180deg); }
+
+  .project-tag {
+    color: var(--overlay0);
+    font-size: 0.82rem;
+    margin-top: 0.25rem;
+  }
+
+  .project-body {
+    margin: 1.1rem 0 0.2rem 2.6rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--surface0);
+    color: var(--subtext1);
+    font-size: 0.9rem;
+  }
+
+  .project-body p { margin: 0 0 0.9rem; }
+  .project-body p:last-child { margin-bottom: 0; }
+
+  .project-body .label {
+    color: var(--overlay1);
+    font-size: 0.72rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .project-links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  .project-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--blue);
+  }
+
+  .project-links a:hover { color: var(--mauve); }
+  .project-links svg { width: 13px; height: 13px; }
+
+  /* ---------- other projects ---------- */
+
+  .other-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--surface0);
+    font-size: 0.92rem;
+  }
+
+  .other-item:last-child { border-bottom: 1px solid var(--surface0); }
+
+  .other-item a.repo-link {
+    color: var(--overlay0);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    transition: color 0.15s ease;
+  }
+
+  .other-item a.repo-link:hover { color: var(--green); }
+  .other-item svg { width: 14px; height: 14px; }
+
+  /* ---------- about ---------- */
+
+  .about-text {
+    color: var(--subtext1);
+    font-size: 0.95rem;
+    max-width: 58ch;
+  }
+
+  .about-text p { margin: 0 0 1rem; }
+  .about-text p:last-child { margin-bottom: 0; }
+
+  /* ---------- contact ---------- */
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .contact-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.92rem;
+    color: var(--subtext1);
+    width: fit-content;
+    transition: color 0.15s ease;
+  }
+
+  .contact-list a:hover { color: var(--peach); }
+  .contact-list svg { width: 16px; height: 16px; color: var(--overlay0); }
+  .contact-list a:hover svg { color: var(--peach); }
+
+  footer {
+    margin-top: 5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--surface0);
+    color: var(--overlay0);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 3.2rem 1.2rem 4rem; }
+    h1.name { font-size: 1.7rem; }
+    .project-body { margin-left: 0; padding-left: 0.9rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--mauve);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ===== header ===== -->
+  <header>
+    <p class="prompt">~$ whoami</p>
+    <h1 class="name">Lunix</h1>
+    <p class="role-line">Computer Science <span>·</span> C++ <span>·</span> Open Source <span>·</span> Systems</p>
+
+    <p class="intro">
+      I write low-level software — drivers, audio DSP, the occasional plugin.
+      Most of it starts because something didn't work and I wanted to know why.
+    </p>
+
+    <div class="social-row">
+      <a href="https://github.com/yourusername" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+        github
+      </a>
+      <a href="mailto:you@example.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+        email
+      </a>
+      <a href="#contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 9l5-5 5 5"/><path d="M12 4v13"/></svg>
+        resume
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== selected projects ===== -->
+  <section id="projects">
+    <p class="section-title" data-glyph="//"><span class="section-title-text">Selected Projects</span></p>
+
+    <div class="project" style="--accent: var(--mauve)">
+      <details>
+        <summary class="project-head">
+          <span class="project-num">01</span>
+          <span class="project-main">
+            <span class="project-title-row">
+              <span class="project-title">MT7630E-MODERN</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+            <span class="project-tag">Linux driver</span>
+          </span>
+        </summary>
+        <div class="project-body">
+          <span class="label">the story</span>
+          <p>
+            The MT7630E wifi chip lost mainline kernel support years ago, leaving
+            a pile of old laptops with dead wifi. I picked up the abandoned
+            out-of-tree driver, ported it against current kernel APIs, and fixed
+            the DMA and interrupt handling that had rotted out.
+          </p>
+          <span class="label">the result</span>
+          <p>
+            It builds cleanly on modern kernels and a handful of people with
+            old ThinkPads have wifi again. Small fix, but it's the kind of
+            unglamorous maintenance that keeps hardware usable past its
+            "official" lifespan.
+          </p>
+          <div class="project-links">
+            <a href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+              source
+            </a>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="project" style="--accent: var(--blue)">
+      <details>
+        <summary class="project-head">
+          <span class="project-num">02</span>
+          <span class="project-main">
+            <span class="project-title-row">
+              <span class="project-title">Disflux</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+            <span class="project-tag">Audio DSP</span>
+          </span>
+        </summary>
+        <div class="project-body">
+          <span class="label">the story</span>
+          <p>
+            I wanted a distortion plugin that didn't just clip a waveform, but
+            let you shape the harmonic character directly. That turned into a
+            few months of reading DSP papers and re-deriving waveshaping math
+            I only half-understood on the first pass.
+          </p>
+          <span class="label">technical details</span>
+          <p>
+            Runs multiple waveshaping stages with 4x oversampling to keep
+            aliasing under control, a tone stage built from cascaded biquad
+            filters, and a wet/dry path designed to stay phase-coherent.
+            Written in C++ against the JUCE framework.
+          </p>
+          <div class="project-links">
+            <a href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+              source
+            </a>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="project" style="--accent: var(--green)">
+      <details>
+        <summary class="project-head">
+          <span class="project-num">03</span>
+          <span class="project-main">
+            <span class="project-title-row">
+              <span class="project-title">Plasma</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+            <span class="project-tag">Audio plugin</span>
+          </span>
+        </summary>
+        <div class="project-body">
+          <span class="label">the story</span>
+          <p>
+            My first real audio plugin, built before I understood most of the
+            constraints that matter for real-time audio. It taught me why
+            allocations on the audio thread are a bad idea, the hard way.
+          </p>
+          <span class="label">honest reflection</span>
+          <p>
+            It works, and people have used it, but the UI code is a mess and
+            the CPU usage is higher than it should be. I keep it around
+            unpolished on purpose — it's a useful reminder of where I started.
+          </p>
+          <div class="project-links">
+            <a href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+              source
+            </a>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="project" style="--accent: var(--peach)">
+      <details>
+        <summary class="project-head">
+          <span class="project-num">04</span>
+          <span class="project-main">
+            <span class="project-title-row">
+              <span class="project-title">ScalesTrainer</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+            <span class="project-tag">Small web experiment</span>
+          </span>
+        </summary>
+        <div class="project-body">
+          <p>
+            A weekend build to drill musical scales in the browser. Nothing
+            deep — just a fun break from systems work.
+          </p>
+          <div class="project-links">
+            <a href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+              source
+            </a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== other projects ===== -->
+  <section id="other-projects">
+    <p class="section-title" data-glyph="//"><span class="section-title-text">Other Projects</span></p>
+
+    <div class="other-item">
+      <span>Encounty</span>
+      <a class="repo-link" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== about ===== -->
+  <section id="about">
+    <p class="section-title" data-glyph="//"><span class="section-title-text">About</span></p>
+    <div class="about-text">
+      <p>
+        I'm a computer science student who spends most of my free time in
+        C++ — usually somewhere between the hardware and the application,
+        where things are either drivers or audio. I like projects that force
+        me to actually understand what's happening underneath, rather than
+        trusting a library to handle it.
+      </p>
+      <p>
+        Outside of code, I'm slowly getting better at admitting when a
+        project didn't turn out the way I planned — most of the ones above
+        are examples of that.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== contact ===== -->
+  <section id="contact">
+    <p class="section-title" data-glyph="//"><span class="section-title-text">Contact</span></p>
+    <div class="contact-list">
+      <a href="mailto:you@example.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+        you@example.com
+      </a>
+      <a href="https://github.com/yourusername" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+        github.com/yourusername
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    built with plain html &amp; css · catppuccin mocha
+  </footer>
+
+</div>
+
+</body>
+</html>
