@@ -19,6 +19,35 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- icon defs, reused via <use> -->
+    <svg style="display: none" aria-hidden="true">
+      <symbol id="icon-github" viewBox="0 0 24 24">
+        <path
+          d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"
+        />
+      </symbol>
+      <symbol id="icon-mail" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m4 7 8 6 8-6" />
+      </symbol>
+      <symbol id="icon-resume" viewBox="0 0 24 24">
+        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+        <path d="M7 9l5-5 5 5" />
+        <path d="M12 4v13" />
+      </symbol>
+      <symbol id="icon-chevron" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        />
+      </symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+      </symbol>
+    </svg>
 
     <div class="wrap">
       <!-- ===== header ===== -->
@@ -51,8 +80,10 @@
               aria-label="Toggle dark/light theme"
               aria-pressed="false"
             >
-              <svg class="icon icon-sun"><use href="icons.svg#icon-sun" /></svg>
-              <svg class="icon icon-moon"><use href="icons.svg#icon-moon" /></svg>
+              <svg class="icon icon-sun"><use href="#icon-sun" /></svg>
+              <svg class="icon icon-moon">
+                <use href="#icon-moon" />
+              </svg>
             </button>
           </div>
         </div>
@@ -78,15 +109,15 @@
             target="_blank"
             rel="noopener"
           >
-            <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+            <svg class="icon"><use href="#icon-github" /></svg>
             <span data-i18n="nav_github">github</span>
           </a>
           <a href="mailto:you@example.com">
-            <svg class="icon"><use href="icons.svg#icon-mail" /></svg>
+            <svg class="icon"><use href="#icon-mail" /></svg>
             <span data-i18n="nav_email">email</span>
           </a>
           <a href="#contact">
-            <svg class="icon"><use href="icons.svg#icon-resume" /></svg>
+            <svg class="icon"><use href="#icon-resume" /></svg>
             <span data-i18n="nav_resume">resume</span>
           </a>
         </div>
@@ -107,30 +138,19 @@
               <span class="project-main">
                 <span class="project-title-row">
                   <span class="project-title">MT7630E-MODERN</span>
-                  <svg class="chev"><use href="icons.svg#icon-chevron" /></svg>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
                 </span>
                 <span class="project-tag" data-i18n="p1_tag">Linux driver</span>
               </span>
             </summary>
             <div class="project-body">
               <span class="label" data-i18n="p1_label_story">the story</span>
-              <p data-i18n="p1_story">
-                The MT7630E wifi chip lost mainline kernel support years ago,
-                leaving a pile of old laptops with dead wifi. I picked up the
-                abandoned out-of-tree driver, ported it against current kernel
-                APIs, and fixed the DMA and interrupt handling that had rotted
-                out.
-              </p>
+              <p data-i18n="p1_story"></p>
               <span class="label" data-i18n="p1_label_result">the result</span>
-              <p data-i18n="p1_result">
-                It builds cleanly on modern kernels and a handful of people with
-                old ThinkPads have wifi again. Small fix, but it's the kind of
-                unglamorous maintenance that keeps hardware usable past its
-                "official" lifespan.
-              </p>
+              <p data-i18n="p1_result"></p>
               <div class="project-links">
                 <a href="#" target="_blank" rel="noopener">
-                  <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+                  <svg class="icon"><use href="#icon-github" /></svg>
                   <span data-i18n="link_source">source</span>
                 </a>
               </div>
@@ -145,31 +165,21 @@
               <span class="project-main">
                 <span class="project-title-row">
                   <span class="project-title">Disflux</span>
-                  <svg class="chev"><use href="icons.svg#icon-chevron" /></svg>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
                 </span>
                 <span class="project-tag" data-i18n="p2_tag">Audio DSP</span>
               </span>
             </summary>
             <div class="project-body">
               <span class="label" data-i18n="p2_label_story">the story</span>
-              <p data-i18n="p2_story">
-                I wanted a distortion plugin that didn't just clip a waveform,
-                but let you shape the harmonic character directly. That turned
-                into a few months of reading DSP papers and re-deriving
-                waveshaping math I only half-understood on the first pass.
-              </p>
+              <p data-i18n="p2_story"></p>
               <span class="label" data-i18n="p2_label_tech"
                 >technical details</span
               >
-              <p data-i18n="p2_tech">
-                Runs multiple waveshaping stages with 4x oversampling to keep
-                aliasing under control, a tone stage built from cascaded biquad
-                filters, and a wet/dry path designed to stay phase-coherent.
-                Written in C++ against the JUCE framework.
-              </p>
+              <p data-i18n="p2_tech"></p>
               <div class="project-links">
                 <a href="#" target="_blank" rel="noopener">
-                  <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+                  <svg class="icon"><use href="#icon-github" /></svg>
                   <span data-i18n="link_source">source</span>
                 </a>
               </div>
@@ -184,31 +194,21 @@
               <span class="project-main">
                 <span class="project-title-row">
                   <span class="project-title">Plasma</span>
-                  <svg class="chev"><use href="icons.svg#icon-chevron" /></svg>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
                 </span>
                 <span class="project-tag" data-i18n="p3_tag">Audio plugin</span>
               </span>
             </summary>
             <div class="project-body">
               <span class="label" data-i18n="p3_label_story">the story</span>
-              <p data-i18n="p3_story">
-                My first real audio plugin, built before I understood most of
-                the constraints that matter for real-time audio. It taught me
-                why allocations on the audio thread are a bad idea, the hard
-                way.
-              </p>
+              <p data-i18n="p3_story"></p>
               <span class="label" data-i18n="p3_label_reflect"
                 >honest reflection</span
               >
-              <p data-i18n="p3_reflect">
-                It works, and people have used it, but the UI code is a mess and
-                the CPU usage is higher than it should be. I keep it around
-                unpolished on purpose — it's a useful reminder of where I
-                started.
-              </p>
+              <p data-i18n="p3_reflect"></p>
               <div class="project-links">
                 <a href="#" target="_blank" rel="noopener">
-                  <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+                  <svg class="icon"><use href="#icon-github" /></svg>
                   <span data-i18n="link_source">source</span>
                 </a>
               </div>
@@ -223,7 +223,7 @@
               <span class="project-main">
                 <span class="project-title-row">
                   <span class="project-title">ScalesTrainer</span>
-                  <svg class="chev"><use href="icons.svg#icon-chevron" /></svg>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
                 </span>
                 <span class="project-tag" data-i18n="p4_tag"
                   >Small web experiment</span
@@ -231,13 +231,10 @@
               </span>
             </summary>
             <div class="project-body">
-              <p data-i18n="p4_text">
-                A weekend build to drill musical scales in the browser. Nothing
-                deep — just a fun break from systems work.
-              </p>
+              <p data-i18n="p4_text"></p>
               <div class="project-links">
                 <a href="#" target="_blank" rel="noopener">
-                  <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+                  <svg class="icon"><use href="#icon-github" /></svg>
                   <span data-i18n="link_source">source</span>
                 </a>
               </div>
@@ -257,7 +254,7 @@
         <div class="other-item">
           <span data-i18n="other_encounty">Encounty</span>
           <a class="repo-link" href="#" target="_blank" rel="noopener">
-            <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+            <svg class="icon"><use href="#icon-github" /></svg>
             <span data-i18n="link_github">GitHub</span>
           </a>
         </div>
@@ -269,18 +266,8 @@
           <span class="section-title-text" data-i18n="sec_about">About</span>
         </p>
         <div class="about-text">
-          <p data-i18n="about_p1">
-            I'm a computer science student who spends most of my free time in
-            C++ — usually somewhere between the hardware and the application,
-            where things are either drivers or audio. I like projects that force
-            me to actually understand what's happening underneath, rather than
-            trusting a library to handle it.
-          </p>
-          <p data-i18n="about_p2">
-            Outside of code, I'm slowly getting better at admitting when a
-            project didn't turn out the way I planned — most of the ones above
-            are examples of that.
-          </p>
+          <p data-i18n="about_p1"></p>
+          <p data-i18n="about_p2"></p>
         </div>
       </section>
 
@@ -293,7 +280,7 @@
         </p>
         <div class="contact-list">
           <a href="mailto:you@example.com">
-            <svg class="icon"><use href="icons.svg#icon-mail" /></svg>
+            <svg class="icon"><use href="#icon-mail" /></svg>
             <span>you@example.com</span>
           </a>
           <a
@@ -301,15 +288,13 @@
             target="_blank"
             rel="noopener"
           >
-            <svg class="icon"><use href="icons.svg#icon-github" /></svg>
+            <svg class="icon"><use href="#icon-github" /></svg>
             <span>github.com/yourusername</span>
           </a>
         </div>
       </section>
 
-      <footer data-i18n="footer">
-        built with plain html &amp; css · catppuccin mocha
-      </footer>
+      <footer data-i18n="footer"></footer>
     </div>
 
     <script src="script.js" defer></script>
