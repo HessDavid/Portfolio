@@ -46,10 +46,12 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--base);
 }
 
 body {
   margin: 0;
+  background: var(--base);
   color: var(--text);
   font-family:
     "Google Sans Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
@@ -274,7 +276,7 @@ section {
 
 .project {
   border-top: 1px solid var(--surface0);
-  padding: 1.6rem 0;
+  padding: 1rem 0;
 }
 
 .project:last-child {
@@ -294,16 +296,19 @@ section {
 }
 
 .project-num {
-  font-size: 0.85rem;
+  font-size: 2rem;
   color: var(--accent, var(--mauve));
-  padding-top: 0.15rem;
   flex-shrink: 0;
-  width: 1.6rem;
+  width: 2rem;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
 }
 
 .project-main {
   flex: 1;
   min-width: 0;
+  position: relative;
 }
 
 .project-title-row {
@@ -320,8 +325,12 @@ section {
 }
 
 .chev {
-  width: 14px;
-  height: 14px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
   color: var(--overlay0);
   transition: transform 0.2s ease;
   flex-shrink: 0;
@@ -331,7 +340,7 @@ section {
 }
 
 details[open] .chev {
-  transform: rotate(180deg);
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .project-tag {
@@ -342,7 +351,7 @@ details[open] .chev {
 }
 
 .project-body {
-  margin: 1.1rem 0 0.2rem 2.6rem;
+  margin: 1.1rem 0 0.2rem 3.3rem;
   padding-left: 1rem;
   border-left: 2px solid var(--surface0);
   color: var(--subtext1);
