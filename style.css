@@ -397,6 +397,19 @@ details[open] .chev {
   height: 13px;
 }
 
+.project-preview {
+  margin: 0 0 1.2rem;
+}
+
+.project-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--surface0);
+  border-radius: 6px;
+  background: var(--mantle);
+}
+
 /* ---------- other projects ---------- */
 
 .other-item {
