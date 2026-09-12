@@ -257,6 +257,13 @@ section {
   font-weight: 500;
 }
 
+.section-intro {
+  color: var(--subtext1);
+  font-size: 0.9rem;
+  max-width: 58ch;
+  margin: 0 0 1.6rem;
+}
+
 /* ---------- projects ---------- */
 
 .project {
