@@ -53,8 +53,8 @@ body {
   background: var(--base);
   color: var(--text);
   font-family:
-    "Google Sans Code", "JetBrains Mono", ui-monospace, SFMono-Regular,
-    Menlo, Consolas, monospace;
+    "Google Sans Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   transition:
@@ -137,8 +137,8 @@ a {
 
 .theme-btn {
   appearance: none;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

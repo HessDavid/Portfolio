@@ -6,7 +6,7 @@ var i18n = {
     role_os: "Open Source",
     role_dsp: "DSP",
     intro:
-      "I write low-level software — drivers, audio DSP, the occasional plugin. Most of it starts because something didn't work and I wanted to know why.",
+      "I build software that I’d love to use myself. I’m most interested in topics like Linux desktop software, audio DSP and modern interfaces.",
     nav_github: "github",
     nav_email: "email",
     nav_resume: "resume",
@@ -45,7 +45,7 @@ var i18n = {
     role_os: "Open Source",
     role_dsp: "DSP",
     intro:
-      "Ich schreibe hardwarenahe Software — Treiber, Audio-DSP, gelegentlich ein Plugin. Meistens fängt es damit an, dass etwas nicht funktioniert hat und ich wissen wollte, warum.",
+      "Ich bastle Software, die ich selbst gerne benutzen würde. Am liebsten irgendwo zwischen Linux-Desktop, Audio-DSP und modernen Interfaces.",
     nav_github: "github",
     nav_email: "e-mail",
     nav_resume: "lebenslauf",
