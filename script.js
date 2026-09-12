@@ -30,11 +30,12 @@ var i18n = {
     p3_sect1: `Plasma started as my first serious C++ audio project, built to learn how audio plugins and real-time DSP work by making a distortion plugin from scratch. I designed it primarily for aggressive electronic music, experimenting with different distortion algorithms, filtering, and sound design along the way.`,
     p3_sect2_label: "Technical Details",
     p3_sect2: `The plugin is written in modern C++23 using the JUCE framework and supports VST3, LV2, AU, and CLAP formats across Windows, macOS, and Linux. As one of my first C++ projects, the codebase reflects my limited experience at the time and makes larger changes difficult. I still maintain the project with occasional updates and bug fixes.`,
-    p4_tag: "Small web experiment",
-    p4_sect1_label: "PLACEHOLDER",
-    p4_sect1: `A weekend build to drill musical scales in the browser. Nothing deep — just a fun break from systems work.`,
-    p4_sect2_label: "PLACEHOLDER",
-    p4_sect2: "PLACEHOLDER",
+    p4_tag: "Interactive Guitar Trainer",
+    p4_sect1_label: "The Story",
+    p4_sect1: `When I started learning to play on an 8-string guitar, I struggled to find digestible and modern-looking learning material for more advanced scales. So I decided to solve this issue for myself by building this web app, which makes exploring scales on guitar more intuitive. It's especially useful when experimenting with sounds outside of classical music theory, particularly for contemporary music like metal.`,
+    p4_sect2_label: "Technical Details",
+    p4_sect2:
+      "Built with Svelte and Tailwind CSS, using the Catppuccin color theme. It features an interactive fretboard with custom tunings, different string counts, scale visualization, and the ability to create custom scales by selecting scale degrees manually.",
     p5_tag: "Multiplayer Bingo Game",
     p5_sect1_label: "PLACEHOLDER",
     p5_sect1: `A small multiplayer bingo game built with Node.js and Socket.IO. Players can join a game room and mark off numbers as they are called out. The first player to complete a line wins!`,
@@ -72,7 +73,7 @@ var i18n = {
     sec_contact: "Kontakt",
     p1_tag: "Linux-Treiber für MT7630E",
     p1_sect1_label: "Die Entstehung",
-    p1_sect1: `Ein Freund von mir wollte mit seinem alten Laptop auf Linux wechseln, aber das Gerät hatte einen MT7630E-WLAN-Chip. Der Hersteller hat den Support komplett eingestellt, und der Out-of-Tree-Treiber verlor in der Linux-4.0-Ära seinen einzigen Maintainer. Der letzte Commit führte unter modernen Kerneln zu unzählig-Fehlern.`,
+    p1_sect1: `Ein Freund von mir wollte mit seinem alten Laptop auf Linux wechseln, aber das Gerät hatte einen MT7630E-WLAN-Chip. Der Hersteller hat den Support komplett eingestellt, und der Out-of-Tree-Treiber verlor in der Linux-4.0-Ära seinen einzigen Maintainer. Der letzte Commit führte unter modernen Kerneln zu unzähligen Fehlern.`,
     p1_sect2_label: "Das Ergebnis",
     p1_sect2: `Der Treiber lässt sich unter modernen Kerneln fehlerfrei kompilieren. Dadurch können Besitzer bestimmter ThinkPad-Modelle wieder aktuelle Distributionen nutzen, ohne auf WLAN verzichten zu müssen.`,
     p2_tag: "Dispersion Audio Effekt",
@@ -85,11 +86,12 @@ var i18n = {
     p3_sect1: `Plasma begann als mein erstes richtiges C++ Projekt. Ich wollte lernen, wie Audio-Plugins und Echtzeit-DSP funktionieren, indem ich ein Distortion-Plugin von Grund auf selbst baue. Ich habe es hauptsächlich für aggressive elektronische Musik entwickelt und dabei mit verschiedenen Distortion-Algorithmen, Filtern und Sounddesign experimentiert.`,
     p3_sect2_label: "Technische Details",
     p3_sect2: `Das Plugin ist in modernem C++23 mit dem JUCE-Framework geschrieben und unterstützt die Formate VST3, LV2, AU und CLAP für Windows, Mac und Linux. Als eines meiner ersten C++-Projekte spiegelt der Code meine damals noch begrenzte Erfahrung wider und macht größere Änderungen schwierig. Ich pflege das Projekt aber weiterhin mit gelegentlichen Updates und Bugfixes.`,
-    p4_tag: "Kleines Web-Experiment",
-    p4_sect1_label: "PLACEHOLDER",
-    p4_sect1: `Ein Wochenendprojekt, um Tonleitern im Browser zu üben. Nichts Tiefgründiges — einfach eine kleine Abwechslung zur Systemprogrammierung.`,
-    p4_sect2_label: "PLACEHOLDER",
-    p4_sect2: "PLACEHOLDER",
+    p4_tag: "Interaktiver Gitarren-Trainer",
+    p4_sect1_label: "Die Geschichte",
+    p4_sect1: `Als ich angefangen habe eine 8-saitigen Gitarre zu lernen, hatte ich Schwierigkeiten, verständliches und modern aufbereitetes Lernmaterial für fortgeschrittenere Tonleitern zu finden. Deshalb habe ich beschlossen, das Problem selbst zu lösen und diese Web-App zu entwickeln, die das Erkunden von Tonleitern auf der Gitarre intuitiver macht. Besonders nützlich ist sie beim Experimentieren mit Tonleiterns abseits der klassischen Musiktheorie, insbesondere für moderne Musik wie Metal.`,
+    p4_sect2_label: "Technische Details",
+    p4_sect2:
+      "Entwickelt mit Svelte und Tailwind CSS und mit dem Catppuccin-Farbschema gestaltet. Die App bietet ein interaktives Griffbrett mit Unterstützung für individuelle Stimmungen, unterschiedliche Saitenanzahlen, Skalenvisualisierung und die Möglichkeit, eigene Skalen durch manuelle Auswahl der Skalentöne zu erstellen.",
     p5_tag: "Multiplayer-Bingo-Spiel",
     p5_sect1_label: "PLACEHOLDER",
     p5_sect1: `Ein kleines Multiplayer-Bingo-Spiel, gebaut mit Node.js und Socket.IO. Spieler können einem Spielraum beitreten und Zahlen abhaken, während sie aufgerufen werden. Der erste Spieler, der eine Reihe vervollständigt, gewinnt!`,
@@ -211,7 +213,8 @@ var i18n = {
     overlay.classList.remove("open");
     overlay.setAttribute("aria-hidden", "true");
     document.body.classList.remove("lightbox-open");
-    if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+    if (lastFocused && typeof lastFocused.focus === "function")
+      lastFocused.focus();
   }
 
   // Add a small "enlarge" button to the top-right of every preview.
