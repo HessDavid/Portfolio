@@ -242,13 +242,13 @@ h1.name {
 /* ---------- sections ---------- */
 
 section {
-  margin-top: 4.5rem;
+  margin-top: 2.5rem;
 }
 
 .section-title {
   font-size: 0.8rem;
   color: var(--overlay0);
-  margin: 0 0 1.6rem;
+  margin: 0 0 0.5rem;
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
@@ -256,18 +256,19 @@ section {
 
 .section-title::before {
   content: "//";
-  color: var(--surface1);
+  font-size: 1rem;
+  color: var(--red);
 }
 
 .section-title-text {
-  color: var(--subtext0);
+  color: var(--red);
   font-size: 0.95rem;
   font-weight: 500;
 }
 
 .section-intro {
   color: var(--subtext1);
-  font-size: 0.9rem;
+  font-size: 1rem;
   max-width: 58ch;
   margin: 0 0 1.6rem;
 }
