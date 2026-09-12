@@ -76,7 +76,7 @@ a {
 }
 
 .wrap {
-  max-width: 640px;
+  max-width: clamp(800px, 92vw, 720px);
   margin: 0 auto;
   padding: 5rem 1.5rem 6rem;
 }
@@ -210,7 +210,7 @@ h1.name {
   margin-top: 1.8rem;
   color: var(--text);
   font-size: 0.95rem;
-  max-width: 56ch;
+  max-width: 100%;
 }
 
 .social-row {
@@ -271,7 +271,7 @@ section {
 .section-intro {
   color: var(--subtext1);
   font-size: 1rem;
-  max-width: 58ch;
+  max-width: 68ch;
   margin: 0 0 1.6rem;
 }
 
@@ -447,7 +447,7 @@ details[open] .chev {
 .about-text {
   color: var(--subtext1);
   font-size: 0.95rem;
-  max-width: 58ch;
+  max-width: 66ch;
 }
 
 .about-text p {
