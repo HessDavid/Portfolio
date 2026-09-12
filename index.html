@@ -1,803 +1,483 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lunix — Computer Science · C++ · Open Source · Systems</title>
-<meta name="description" content="Lunix — systems programmer working on drivers, audio DSP, and small tools.">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500;700&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    /* Catppuccin Mocha (dark, default) */
-    --base: #1e1e2e;
-    --mantle: #181825;
-    --crust: #11111b;
-    --text: #cdd6f4;
-    --subtext1: #bac2de;
-    --subtext0: #a6adc8;
-    --overlay1: #7f849c;
-    --overlay0: #6c7086;
-    --surface1: #45475a;
-    --surface0: #313244;
-    --mauve: #cba6f7;
-    --blue: #89b4fa;
-    --green: #a6e3a1;
-    --peach: #fab387;
-    --red: #f38ba8;
-    --teal: #94e2d5;
-    --yellow: #f9e2af;
-  }
-
-  [data-theme="light"] {
-    /* Catppuccin Latte */
-    --base: #eff1f5;
-    --mantle: #e6e9ef;
-    --crust: #dce0e8;
-    --text: #4c4f69;
-    --subtext1: #5c5f77;
-    --subtext0: #6c6f85;
-    --overlay1: #8c8fa1;
-    --overlay0: #9ca0b0;
-    --surface1: #acb0be;
-    --surface0: #ccd0da;
-    --mauve: #8839ef;
-    --blue: #1e66f5;
-    --green: #40a02b;
-    --peach: #fe640b;
-    --red: #d20f39;
-    --teal: #179299;
-    --yellow: #df8e1d;
-  }
-
-  * { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    margin: 0;
-    background: var(--base);
-    color: var(--text);
-    font-family: 'Google Sans Code', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-
-  ::selection {
-    background: var(--mauve);
-    color: var(--crust);
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .wrap {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 5rem 1.5rem 6rem;
-  }
-
-  /* ---------- top controls ---------- */
-
-  .whoami-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin: 0 0 0.35rem;
-  }
-
-  .whoami-row .prompt { margin: 0; }
-
-  .header-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-shrink: 0;
-  }
-
-  .lang-switch {
-    display: flex;
-    border: 1px solid var(--surface0);
-    border-radius: 6px;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  .lang-btn {
-    appearance: none;
-    background: transparent;
-    border: none;
-    color: var(--overlay0);
-    font-family: inherit;
-    font-size: 0.78rem;
-    letter-spacing: 0.03em;
-    padding: 0.45rem 0.75rem;
-    cursor: pointer;
-    transition: color 0.15s ease, background-color 0.15s ease;
-  }
-
-  .lang-btn + .lang-btn { border-left: 1px solid var(--surface0); }
-
-  .lang-btn[aria-pressed="true"] {
-    color: var(--base);
-    background: var(--mauve);
-  }
-
-  .lang-btn:not([aria-pressed="true"]):hover { color: var(--subtext1); }
-
-  .theme-btn {
-    appearance: none;
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--surface0);
-    border-radius: 6px;
-    background: transparent;
-    color: var(--overlay0);
-    cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .theme-btn:hover { color: var(--peach); border-color: var(--surface1); }
-  .theme-btn svg { width: 15px; height: 15px; }
-  .theme-btn .icon-moon { display: none; }
-  [data-theme="light"] .theme-btn .icon-sun { display: none; }
-  [data-theme="light"] .theme-btn .icon-moon { display: inline-block; }
-
-  /* ---------- header ---------- */
-
-  .prompt {
-    color: var(--overlay0);
-    font-size: 0.85rem;
-    margin: 0 0 0.35rem;
-  }
-
-  h1.name {
-    font-size: 2.1rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-
-  .role-line {
-    color: var(--subtext0);
-    font-size: 0.95rem;
-    margin: 0.6rem 0 0;
-  }
-
-  .role-line .dot { color: var(--overlay0); }
-
-  .intro {
-    margin-top: 1.8rem;
-    color: var(--subtext1);
-    font-size: 0.95rem;
-    max-width: 56ch;
-  }
-
-  .social-row {
-    display: flex;
-    gap: 1.1rem;
-    margin-top: 1.6rem;
-  }
-
-  .social-row a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--overlay0);
-    font-size: 0.85rem;
-    transition: color 0.15s ease;
-  }
-
-  .social-row a:hover { color: var(--mauve); }
-
-  .icon {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.6;
-  }
-
-  /* ---------- sections ---------- */
-
-  section {
-    margin-top: 4.5rem;
-  }
-
-  .section-title {
-    font-size: 0.8rem;
-    color: var(--overlay0);
-    margin: 0 0 1.6rem;
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-  }
-
-  .section-title::before {
-    content: "//";
-    color: var(--surface1);
-  }
-
-  .section-title-text {
-    color: var(--subtext0);
-    font-size: 0.95rem;
-    font-weight: 500;
-  }
-
-  /* ---------- projects ---------- */
-
-  .project {
-    border-top: 1px solid var(--surface0);
-    padding: 1.6rem 0;
-  }
-
-  .project:last-child {
-    border-bottom: 1px solid var(--surface0);
-  }
-
-  .project-head {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .project-head::-webkit-details-marker { display: none; }
-
-  .project-num {
-    font-size: 0.85rem;
-    color: var(--accent, var(--mauve));
-    padding-top: 0.15rem;
-    flex-shrink: 0;
-    width: 1.6rem;
-  }
-
-  .project-main { flex: 1; min-width: 0; }
-
-  .project-title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .project-title {
-    font-size: 1.02rem;
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  .chev {
-    width: 14px;
-    height: 14px;
-    color: var(--overlay0);
-    transition: transform 0.2s ease;
-    flex-shrink: 0;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-  }
-
-  details[open] .chev { transform: rotate(180deg); }
-
-  .project-tag {
-    color: var(--overlay0);
-    font-size: 0.82rem;
-    margin-top: 0.25rem;
-    display: block;
-  }
-
-  .project-body {
-    margin: 1.1rem 0 0.2rem 2.6rem;
-    padding-left: 1rem;
-    border-left: 2px solid var(--surface0);
-    color: var(--subtext1);
-    font-size: 0.9rem;
-  }
-
-  .project-body p { margin: 0 0 0.9rem; }
-  .project-body p:last-child { margin-bottom: 0; }
-
-  .project-body .label {
-    color: var(--overlay1);
-    font-size: 0.72rem;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .project-links {
-    margin-top: 1rem;
-    display: flex;
-    gap: 1.2rem;
-  }
-
-  .project-links a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.82rem;
-    color: var(--blue);
-  }
-
-  .project-links a:hover { color: var(--mauve); }
-  .project-links .icon { width: 13px; height: 13px; }
-
-  /* ---------- other projects ---------- */
-
-  .other-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 0;
-    border-top: 1px solid var(--surface0);
-    font-size: 0.92rem;
-  }
-
-  .other-item:last-child { border-bottom: 1px solid var(--surface0); }
-
-  .other-item a.repo-link {
-    color: var(--overlay0);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.82rem;
-    transition: color 0.15s ease;
-  }
-
-  .other-item a.repo-link:hover { color: var(--green); }
-  .other-item .icon { width: 14px; height: 14px; }
-
-  /* ---------- about ---------- */
-
-  .about-text {
-    color: var(--subtext1);
-    font-size: 0.95rem;
-    max-width: 58ch;
-  }
-
-  .about-text p { margin: 0 0 1rem; }
-  .about-text p:last-child { margin-bottom: 0; }
-
-  /* ---------- contact ---------- */
-
-  .contact-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-  }
-
-  .contact-list a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    font-size: 0.92rem;
-    color: var(--subtext1);
-    width: fit-content;
-    transition: color 0.15s ease;
-  }
-
-  .contact-list a:hover { color: var(--peach); }
-  .contact-list .icon { color: var(--overlay0); }
-  .contact-list a:hover .icon { color: var(--peach); }
-
-  footer {
-    margin-top: 5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--surface0);
-    color: var(--overlay0);
-    font-size: 0.78rem;
-  }
-
-  @media (max-width: 480px) {
-    .wrap { padding: 3.2rem 1.2rem 4rem; }
-    h1.name { font-size: 1.7rem; }
-    .project-body { margin-left: 0; padding-left: 0.9rem; }
-    .whoami-row { align-items: center; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { transition: none !important; }
-  }
-
-  a:focus-visible, summary:focus-visible, .lang-btn:focus-visible, .theme-btn:focus-visible {
-    outline: 2px solid var(--mauve);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-</style>
-</head>
-<body>
-
-<!-- icon defs, reused via <use> -->
-<svg style="display:none" aria-hidden="true">
-  <symbol id="icon-github" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></symbol>
-  <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
-  <symbol id="icon-resume" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 9l5-5 5 5"/><path d="M12 4v13"/></symbol>
-  <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-  <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
-  <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></symbol>
-</svg>
-
-<div class="wrap">
-
-  <!-- ===== header ===== -->
-  <header>
-    <div class="whoami-row">
-      <p class="prompt" data-i18n="whoami">~$ whoami</p>
-      <div class="header-controls">
-        <div class="lang-switch" role="group" aria-label="Language">
-          <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
-          <button type="button" class="lang-btn" data-lang="de" aria-pressed="true">DE</button>
-        </div>
-        <button type="button" class="theme-btn" id="themeToggle" aria-label="Toggle dark/light theme" aria-pressed="false">
-          <svg class="icon icon-sun"><use href="#icon-sun"/></svg>
-          <svg class="icon icon-moon"><use href="#icon-moon"/></svg>
-        </button>
-      </div>
-    </div>
-    <h1 class="name">Lunix</h1>
-    <p class="role-line">
-      <span data-i18n="role_cs">Computer Science</span> <span class="dot">·</span>
-      <span data-i18n="role_cpp">C++</span> <span class="dot">·</span>
-      <span data-i18n="role_os">Open Source</span> <span class="dot">·</span>
-      <span data-i18n="role_sys">Systems</span>
-    </p>
-
-    <p class="intro" data-i18n="intro">
-      I write low-level software — drivers, audio DSP, the occasional plugin.
-      Most of it starts because something didn't work and I wanted to know why.
-    </p>
-
-    <div class="social-row">
-      <a href="https://github.com/yourusername" target="_blank" rel="noopener">
-        <svg class="icon"><use href="#icon-github"/></svg>
-        <span data-i18n="nav_github">github</span>
-      </a>
-      <a href="mailto:you@example.com">
-        <svg class="icon"><use href="#icon-mail"/></svg>
-        <span data-i18n="nav_email">email</span>
-      </a>
-      <a href="#contact">
-        <svg class="icon"><use href="#icon-resume"/></svg>
-        <span data-i18n="nav_resume">resume</span>
-      </a>
-    </div>
-  </header>
-
-  <!-- ===== selected projects ===== -->
-  <section id="projects">
-    <p class="section-title"><span class="section-title-text" data-i18n="sec_projects">Selected Projects</span></p>
-
-    <div class="project" style="--accent: var(--mauve)">
-      <details>
-        <summary class="project-head">
-          <span class="project-num">01</span>
-          <span class="project-main">
-            <span class="project-title-row">
-              <span class="project-title">MT7630E-MODERN</span>
-              <svg class="chev"><use href="#icon-chevron"/></svg>
-            </span>
-            <span class="project-tag" data-i18n="p1_tag">Linux driver</span>
-          </span>
-        </summary>
-        <div class="project-body">
-          <span class="label" data-i18n="p1_label_story">the story</span>
-          <p data-i18n="p1_story">
-            The MT7630E wifi chip lost mainline kernel support years ago, leaving
-            a pile of old laptops with dead wifi. I picked up the abandoned
-            out-of-tree driver, ported it against current kernel APIs, and fixed
-            the DMA and interrupt handling that had rotted out.
-          </p>
-          <span class="label" data-i18n="p1_label_result">the result</span>
-          <p data-i18n="p1_result">
-            It builds cleanly on modern kernels and a handful of people with
-            old ThinkPads have wifi again. Small fix, but it's the kind of
-            unglamorous maintenance that keeps hardware usable past its
-            "official" lifespan.
-          </p>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">
-              <svg class="icon"><use href="#icon-github"/></svg>
-              <span data-i18n="link_source">source</span>
-            </a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>David Hess</title>
+    <meta
+      name="description"
+      content="David Hess — Software Development · Linux · Open Source · DSP"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- icon defs, reused via <use> -->
+    <svg style="display: none" aria-hidden="true">
+      <symbol id="icon-github" viewBox="0 0 24 24">
+        <path
+          d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"
+        />
+      </symbol>
+      <symbol id="icon-mail" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m4 7 8 6 8-6" />
+      </symbol>
+      <symbol id="icon-resume" viewBox="0 0 24 24">
+        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+        <path d="M7 9l5-5 5 5" />
+        <path d="M12 4v13" />
+      </symbol>
+      <symbol id="icon-chevron" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        />
+      </symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+      </symbol>
+    </svg>
+
+    <div class="wrap">
+      <!-- ===== header ===== -->
+      <header>
+        <div class="whoami-row">
+          <p class="prompt" data-i18n="whoami">~$ whoami</p>
+          <div class="header-controls">
+            <div class="lang-switch" role="group" aria-label="Language">
+              <button
+                type="button"
+                class="lang-btn"
+                data-lang="en"
+                aria-pressed="false"
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                class="lang-btn"
+                data-lang="de"
+                aria-pressed="true"
+              >
+                DE
+              </button>
+            </div>
+            <button
+              type="button"
+              class="theme-btn"
+              id="themeToggle"
+              aria-label="Toggle dark/light theme"
+              aria-pressed="false"
+            >
+              <svg class="icon icon-sun"><use href="#icon-sun" /></svg>
+              <svg class="icon icon-moon"><use href="#icon-moon" /></svg>
+            </button>
           </div>
         </div>
-      </details>
-    </div>
+        <h1 class="name">David Hess</h1>
+        <p class="role-line">
+          <span data-i18n="role_dev">Software Development</span>
+          <span class="dot">·</span> <span data-i18n="role_linux">Linux</span>
+          <span class="dot">·</span>
+          <span data-i18n="role_os">Open Source</span>
+          <span class="dot">·</span>
+          <span data-i18n="role_dsp">DSP</span>
+        </p>
 
-    <div class="project" style="--accent: var(--blue)">
-      <details>
-        <summary class="project-head">
-          <span class="project-num">02</span>
-          <span class="project-main">
-            <span class="project-title-row">
-              <span class="project-title">Disflux</span>
-              <svg class="chev"><use href="#icon-chevron"/></svg>
-            </span>
-            <span class="project-tag" data-i18n="p2_tag">Audio DSP</span>
-          </span>
-        </summary>
-        <div class="project-body">
-          <span class="label" data-i18n="p2_label_story">the story</span>
-          <p data-i18n="p2_story">
-            I wanted a distortion plugin that didn't just clip a waveform, but
-            let you shape the harmonic character directly. That turned into a
-            few months of reading DSP papers and re-deriving waveshaping math
-            I only half-understood on the first pass.
-          </p>
-          <span class="label" data-i18n="p2_label_tech">technical details</span>
-          <p data-i18n="p2_tech">
-            Runs multiple waveshaping stages with 4x oversampling to keep
-            aliasing under control, a tone stage built from cascaded biquad
-            filters, and a wet/dry path designed to stay phase-coherent.
-            Written in C++ against the JUCE framework.
-          </p>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">
-              <svg class="icon"><use href="#icon-github"/></svg>
-              <span data-i18n="link_source">source</span>
-            </a>
-          </div>
+        <p class="intro" data-i18n="intro">
+          I write low-level software — drivers, audio DSP, the occasional
+          plugin. Most of it starts because something didn't work and I wanted
+          to know why.
+        </p>
+
+        <div class="social-row">
+          <a
+            href="https://github.com/yourusername"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg class="icon"><use href="#icon-github" /></svg>
+            <span data-i18n="nav_github">github</span>
+          </a>
+          <a href="mailto:you@example.com">
+            <svg class="icon"><use href="#icon-mail" /></svg>
+            <span data-i18n="nav_email">email</span>
+          </a>
+          <a href="#contact">
+            <svg class="icon"><use href="#icon-resume" /></svg>
+            <span data-i18n="nav_resume">resume</span>
+          </a>
         </div>
-      </details>
-    </div>
+      </header>
 
-    <div class="project" style="--accent: var(--green)">
-      <details>
-        <summary class="project-head">
-          <span class="project-num">03</span>
-          <span class="project-main">
-            <span class="project-title-row">
-              <span class="project-title">Plasma</span>
-              <svg class="chev"><use href="#icon-chevron"/></svg>
-            </span>
-            <span class="project-tag" data-i18n="p3_tag">Audio plugin</span>
-          </span>
-        </summary>
-        <div class="project-body">
-          <span class="label" data-i18n="p3_label_story">the story</span>
-          <p data-i18n="p3_story">
-            My first real audio plugin, built before I understood most of the
-            constraints that matter for real-time audio. It taught me why
-            allocations on the audio thread are a bad idea, the hard way.
-          </p>
-          <span class="label" data-i18n="p3_label_reflect">honest reflection</span>
-          <p data-i18n="p3_reflect">
-            It works, and people have used it, but the UI code is a mess and
-            the CPU usage is higher than it should be. I keep it around
-            unpolished on purpose — it's a useful reminder of where I started.
-          </p>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">
-              <svg class="icon"><use href="#icon-github"/></svg>
-              <span data-i18n="link_source">source</span>
-            </a>
-          </div>
+      <!-- ===== selected projects ===== -->
+      <section id="projects">
+        <p class="section-title">
+          <span class="section-title-text" data-i18n="sec_projects"
+            >Selected Projects</span
+          >
+        </p>
+
+        <div class="project" style="--accent: var(--mauve)">
+          <details>
+            <summary class="project-head">
+              <span class="project-num">01</span>
+              <span class="project-main">
+                <span class="project-title-row">
+                  <span class="project-title">MT7630E-MODERN</span>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
+                </span>
+                <span class="project-tag" data-i18n="p1_tag">Linux driver</span>
+              </span>
+            </summary>
+            <div class="project-body">
+              <span class="label" data-i18n="p1_label_story">the story</span>
+              <p data-i18n="p1_story">
+                The MT7630E wifi chip lost mainline kernel support years ago,
+                leaving a pile of old laptops with dead wifi. I picked up the
+                abandoned out-of-tree driver, ported it against current kernel
+                APIs, and fixed the DMA and interrupt handling that had rotted
+                out.
+              </p>
+              <span class="label" data-i18n="p1_label_result">the result</span>
+              <p data-i18n="p1_result">
+                It builds cleanly on modern kernels and a handful of people with
+                old ThinkPads have wifi again. Small fix, but it's the kind of
+                unglamorous maintenance that keeps hardware usable past its
+                "official" lifespan.
+              </p>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener">
+                  <svg class="icon"><use href="#icon-github" /></svg>
+                  <span data-i18n="link_source">source</span>
+                </a>
+              </div>
+            </div>
+          </details>
         </div>
-      </details>
-    </div>
 
-    <div class="project" style="--accent: var(--peach)">
-      <details>
-        <summary class="project-head">
-          <span class="project-num">04</span>
-          <span class="project-main">
-            <span class="project-title-row">
-              <span class="project-title">ScalesTrainer</span>
-              <svg class="chev"><use href="#icon-chevron"/></svg>
-            </span>
-            <span class="project-tag" data-i18n="p4_tag">Small web experiment</span>
-          </span>
-        </summary>
-        <div class="project-body">
-          <p data-i18n="p4_text">
-            A weekend build to drill musical scales in the browser. Nothing
-            deep — just a fun break from systems work.
-          </p>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">
-              <svg class="icon"><use href="#icon-github"/></svg>
-              <span data-i18n="link_source">source</span>
-            </a>
-          </div>
+        <div class="project" style="--accent: var(--blue)">
+          <details>
+            <summary class="project-head">
+              <span class="project-num">02</span>
+              <span class="project-main">
+                <span class="project-title-row">
+                  <span class="project-title">Disflux</span>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
+                </span>
+                <span class="project-tag" data-i18n="p2_tag">Audio DSP</span>
+              </span>
+            </summary>
+            <div class="project-body">
+              <span class="label" data-i18n="p2_label_story">the story</span>
+              <p data-i18n="p2_story">
+                I wanted a distortion plugin that didn't just clip a waveform,
+                but let you shape the harmonic character directly. That turned
+                into a few months of reading DSP papers and re-deriving
+                waveshaping math I only half-understood on the first pass.
+              </p>
+              <span class="label" data-i18n="p2_label_tech"
+                >technical details</span
+              >
+              <p data-i18n="p2_tech">
+                Runs multiple waveshaping stages with 4x oversampling to keep
+                aliasing under control, a tone stage built from cascaded biquad
+                filters, and a wet/dry path designed to stay phase-coherent.
+                Written in C++ against the JUCE framework.
+              </p>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener">
+                  <svg class="icon"><use href="#icon-github" /></svg>
+                  <span data-i18n="link_source">source</span>
+                </a>
+              </div>
+            </div>
+          </details>
         </div>
-      </details>
+
+        <div class="project" style="--accent: var(--green)">
+          <details>
+            <summary class="project-head">
+              <span class="project-num">03</span>
+              <span class="project-main">
+                <span class="project-title-row">
+                  <span class="project-title">Plasma</span>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
+                </span>
+                <span class="project-tag" data-i18n="p3_tag">Audio plugin</span>
+              </span>
+            </summary>
+            <div class="project-body">
+              <span class="label" data-i18n="p3_label_story">the story</span>
+              <p data-i18n="p3_story">
+                My first real audio plugin, built before I understood most of
+                the constraints that matter for real-time audio. It taught me
+                why allocations on the audio thread are a bad idea, the hard
+                way.
+              </p>
+              <span class="label" data-i18n="p3_label_reflect"
+                >honest reflection</span
+              >
+              <p data-i18n="p3_reflect">
+                It works, and people have used it, but the UI code is a mess and
+                the CPU usage is higher than it should be. I keep it around
+                unpolished on purpose — it's a useful reminder of where I
+                started.
+              </p>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener">
+                  <svg class="icon"><use href="#icon-github" /></svg>
+                  <span data-i18n="link_source">source</span>
+                </a>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="project" style="--accent: var(--peach)">
+          <details>
+            <summary class="project-head">
+              <span class="project-num">04</span>
+              <span class="project-main">
+                <span class="project-title-row">
+                  <span class="project-title">ScalesTrainer</span>
+                  <svg class="chev"><use href="#icon-chevron" /></svg>
+                </span>
+                <span class="project-tag" data-i18n="p4_tag"
+                  >Small web experiment</span
+                >
+              </span>
+            </summary>
+            <div class="project-body">
+              <p data-i18n="p4_text">
+                A weekend build to drill musical scales in the browser. Nothing
+                deep — just a fun break from systems work.
+              </p>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener">
+                  <svg class="icon"><use href="#icon-github" /></svg>
+                  <span data-i18n="link_source">source</span>
+                </a>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== other projects ===== -->
+      <section id="other-projects">
+        <p class="section-title">
+          <span class="section-title-text" data-i18n="sec_other"
+            >Other Projects</span
+          >
+        </p>
+
+        <div class="other-item">
+          <span data-i18n="other_encounty">Encounty</span>
+          <a class="repo-link" href="#" target="_blank" rel="noopener">
+            <svg class="icon"><use href="#icon-github" /></svg>
+            <span data-i18n="link_github">GitHub</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ===== about ===== -->
+      <section id="about">
+        <p class="section-title">
+          <span class="section-title-text" data-i18n="sec_about">About</span>
+        </p>
+        <div class="about-text">
+          <p data-i18n="about_p1">
+            I'm a computer science student who spends most of my free time in
+            C++ — usually somewhere between the hardware and the application,
+            where things are either drivers or audio. I like projects that force
+            me to actually understand what's happening underneath, rather than
+            trusting a library to handle it.
+          </p>
+          <p data-i18n="about_p2">
+            Outside of code, I'm slowly getting better at admitting when a
+            project didn't turn out the way I planned — most of the ones above
+            are examples of that.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== contact ===== -->
+      <section id="contact">
+        <p class="section-title">
+          <span class="section-title-text" data-i18n="sec_contact"
+            >Contact</span
+          >
+        </p>
+        <div class="contact-list">
+          <a href="mailto:you@example.com">
+            <svg class="icon"><use href="#icon-mail" /></svg>
+            <span>you@example.com</span>
+          </a>
+          <a
+            href="https://github.com/yourusername"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg class="icon"><use href="#icon-github" /></svg>
+            <span>github.com/yourusername</span>
+          </a>
+        </div>
+      </section>
+
+      <footer data-i18n="footer">
+        built with plain html &amp; css · catppuccin mocha
+      </footer>
     </div>
-  </section>
 
-  <!-- ===== other projects ===== -->
-  <section id="other-projects">
-    <p class="section-title"><span class="section-title-text" data-i18n="sec_other">Other Projects</span></p>
+    <script>
+      var i18n = {
+        en: {
+          whoami: "~$ whoami",
+          role_dev: "Software Development",
+          role_linux: "Linux",
+          role_os: "Open Source",
+          role_dsp: "DSP",
+          intro:
+            "I write low-level software — drivers, audio DSP, the occasional plugin. Most of it starts because something didn't work and I wanted to know why.",
+          nav_github: "github",
+          nav_email: "email",
+          nav_resume: "resume",
+          sec_projects: "Selected Projects",
+          sec_other: "Other Projects",
+          sec_about: "About",
+          sec_contact: "Contact",
+          p1_tag: "Linux driver",
+          p1_label_story: "the story",
+          p1_story: `The MT7630E wifi chip lost mainline kernel support years ago, leaving a pile of old laptops with dead wifi. I picked up the abandoned out-of-tree driver, ported it against current kernel APIs, and fixed the DMA and interrupt handling that had rotted out.`,
+          p1_label_result: "the result",
+          p1_result: `It builds cleanly on modern kernels and a handful of people with old ThinkPads have wifi again. Small fix, but it's the kind of unglamorous maintenance that keeps hardware usable past its "official" lifespan.`,
+          p2_tag: "Audio DSP",
+          p2_label_story: "the story",
+          p2_story: `I wanted a distortion plugin that didn't just clip a waveform, but let you shape the harmonic character directly. That turned into a few months of reading DSP papers and re-deriving waveshaping math I only half-understood on the first pass.`,
+          p2_label_tech: "technical details",
+          p2_tech: `Runs multiple waveshaping stages with 4x oversampling to keep aliasing under control, a tone stage built from cascaded biquad filters, and a wet/dry path designed to stay phase-coherent. Written in C++ against the JUCE framework.`,
+          p3_tag: "Audio plugin",
+          p3_label_story: "the story",
+          p3_story: `My first real audio plugin, built before I understood most of the constraints that matter for real-time audio. It taught me why allocations on the audio thread are a bad idea, the hard way.`,
+          p3_label_reflect: "honest reflection",
+          p3_reflect: `It works, and people have used it, but the UI code is a mess and the CPU usage is higher than it should be. I keep it around unpolished on purpose — it's a useful reminder of where I started.`,
+          p4_tag: "Small web experiment",
+          p4_text: `A weekend build to drill musical scales in the browser. Nothing deep — just a fun break from systems work.`,
+          link_source: "source",
+          other_encounty: "Encounty",
+          link_github: "GitHub",
+          about_p1: `I'm a computer science student who spends most of my free time in C++ — usually somewhere between the hardware and the application, where things are either drivers or audio. I like projects that force me to actually understand what's happening underneath, rather than trusting a library to handle it.`,
+          about_p2: `Outside of code, I'm slowly getting better at admitting when a project didn't turn out the way I planned — most of the ones above are examples of that.`,
+          footer: "built with plain html & css · catppuccin mocha",
+        },
+        de: {
+          whoami: "~$ whoami",
+          role_dev: "Softwareentwicklung",
+          role_linux: "Linux",
+          role_os: "Open Source",
+          role_dsp: "DSP",
+          intro:
+            "Ich schreibe hardwarenahe Software — Treiber, Audio-DSP, gelegentlich ein Plugin. Meistens fängt es damit an, dass etwas nicht funktioniert hat und ich wissen wollte, warum.",
+          nav_github: "github",
+          nav_email: "e-mail",
+          nav_resume: "lebenslauf",
+          sec_projects: "Ausgewählte Projekte",
+          sec_other: "Weitere Projekte",
+          sec_about: "Über mich",
+          sec_contact: "Kontakt",
+          p1_tag: "Linux-Treiber",
+          p1_label_story: "die Geschichte",
+          p1_story: `Der MT7630E-WLAN-Chip verlor vor Jahren die Unterstützung im Mainline-Kernel, wodurch etliche alte Laptops ohne funktionierendes WLAN dastanden. Ich habe den verwaisten Out-of-Tree-Treiber übernommen, auf aktuelle Kernel-APIs portiert und das DMA- und Interrupt-Handling repariert, das mit der Zeit verrottet war.`,
+          p1_label_result: "das Ergebnis",
+          p1_result: `Er lässt sich sauber gegen aktuelle Kernel bauen, und ein paar Leute mit alten ThinkPads haben wieder WLAN. Ein kleiner Fix, aber genau die unglamouröse Wartungsarbeit, die Hardware über ihre "offizielle" Lebensdauer hinaus nutzbar hält.`,
+          p2_tag: "Audio-DSP",
+          p2_label_story: "die Geschichte",
+          p2_story: `Ich wollte ein Distortion-Plugin, das nicht einfach eine Wellenform kappt, sondern den harmonischen Charakter direkt formbar macht. Daraus wurden ein paar Monate DSP-Paper lesen und Waveshaping-Mathematik neu herleiten, die ich beim ersten Versuch nur halb verstanden hatte.`,
+          p2_label_tech: "technische Details",
+          p2_tech: `Mehrere Waveshaping-Stufen mit 4-facher Überabtastung gegen Aliasing, eine Klangregelstufe aus kaskadierten Biquad-Filtern und ein Wet/Dry-Pfad, der phasenkohärent bleibt. Geschrieben in C++ mit dem JUCE-Framework.`,
+          p3_tag: "Audio-Plugin",
+          p3_label_story: "die Geschichte",
+          p3_story: `Mein erstes richtiges Audio-Plugin, gebaut bevor ich die meisten Einschränkungen verstanden hatte, die bei Echtzeit-Audio wichtig sind. Es hat mir auf die harte Tour beigebracht, warum Allokationen im Audio-Thread eine schlechte Idee sind.`,
+          p3_label_reflect: "ehrliche Reflexion",
+          p3_reflect: `Es funktioniert, und Leute haben es benutzt, aber der UI-Code ist unaufgeräumt und die CPU-Last höher als sie sein sollte. Ich lasse es absichtlich unpoliert — eine nützliche Erinnerung daran, wo ich angefangen habe.`,
+          p4_tag: "Kleines Web-Experiment",
+          p4_text: `Ein Wochenendprojekt, um Tonleitern im Browser zu üben. Nichts Tiefgründiges — einfach eine kleine Abwechslung zur Systemprogrammierung.`,
+          link_source: "quellcode",
+          other_encounty: "Encounty",
+          link_github: "GitHub",
+          about_p1: `Ich studiere Informatik und verbringe die meiste Freizeit mit C++ — meist irgendwo zwischen Hardware und Anwendung, bei Treibern oder Audio. Ich mag Projekte, bei denen ich wirklich verstehen muss, was darunter passiert, statt einer Bibliothek blind zu vertrauen.`,
+          about_p2: `Abseits von Code werde ich langsam besser darin, zuzugeben, wenn ein Projekt nicht so gelaufen ist wie geplant — die meisten oben sind Beispiele dafür.`,
+          footer: "gebaut mit reinem html & css · catppuccin mocha",
+        },
+      };
 
-    <div class="other-item">
-      <span data-i18n="other_encounty">Encounty</span>
-      <a class="repo-link" href="#" target="_blank" rel="noopener">
-        <svg class="icon"><use href="#icon-github"/></svg>
-        <span data-i18n="link_github">GitHub</span>
-      </a>
-    </div>
-  </section>
+      (function () {
+        var root = document.documentElement;
+        var themeToggle = document.getElementById("themeToggle");
+        var langButtons = document.querySelectorAll(".lang-btn");
 
-  <!-- ===== about ===== -->
-  <section id="about">
-    <p class="section-title"><span class="section-title-text" data-i18n="sec_about">About</span></p>
-    <div class="about-text">
-      <p data-i18n="about_p1">
-        I'm a computer science student who spends most of my free time in
-        C++ — usually somewhere between the hardware and the application,
-        where things are either drivers or audio. I like projects that force
-        me to actually understand what's happening underneath, rather than
-        trusting a library to handle it.
-      </p>
-      <p data-i18n="about_p2">
-        Outside of code, I'm slowly getting better at admitting when a
-        project didn't turn out the way I planned — most of the ones above
-        are examples of that.
-      </p>
-    </div>
-  </section>
+        function applyTheme(theme) {
+          root.setAttribute("data-theme", theme);
+          themeToggle.setAttribute(
+            "aria-pressed",
+            theme === "light" ? "true" : "false",
+          );
+        }
 
-  <!-- ===== contact ===== -->
-  <section id="contact">
-    <p class="section-title"><span class="section-title-text" data-i18n="sec_contact">Contact</span></p>
-    <div class="contact-list">
-      <a href="mailto:you@example.com">
-        <svg class="icon"><use href="#icon-mail"/></svg>
-        <span>you@example.com</span>
-      </a>
-      <a href="https://github.com/yourusername" target="_blank" rel="noopener">
-        <svg class="icon"><use href="#icon-github"/></svg>
-        <span>github.com/yourusername</span>
-      </a>
-    </div>
-  </section>
+        function applyLang(lang) {
+          var dict = i18n[lang] || i18n.en;
+          document.querySelectorAll("[data-i18n]").forEach(function (el) {
+            var key = el.getAttribute("data-i18n");
+            if (dict[key] !== undefined) el.textContent = dict[key];
+          });
+          root.setAttribute("lang", lang);
+          langButtons.forEach(function (btn) {
+            btn.setAttribute(
+              "aria-pressed",
+              btn.dataset.lang === lang ? "true" : "false",
+            );
+          });
+        }
 
-  <footer data-i18n="footer">
-    built with plain html &amp; css · catppuccin mocha
-  </footer>
+        // Initial theme: follow system preference, default dark.
+        // Not persisted between visits on purpose (no localStorage) — see note below
+        // if you want the choice to stick across reloads on your deployed site.
+        var prefersLight =
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: light)").matches;
+        applyTheme(prefersLight ? "light" : "dark");
 
-</div>
+        themeToggle.addEventListener("click", function () {
+          var current = root.getAttribute("data-theme");
+          applyTheme(current === "light" ? "dark" : "light");
+        });
 
-<script>
-  var i18n = {
-    en: {
-      whoami: "~$ whoami",
-      role_cs: "Computer Science",
-      role_cpp: "C++",
-      role_os: "Open Source",
-      role_sys: "Systems",
-      intro: "I write low-level software — drivers, audio DSP, the occasional plugin. Most of it starts because something didn't work and I wanted to know why.",
-      nav_github: "github",
-      nav_email: "email",
-      nav_resume: "resume",
-      sec_projects: "Selected Projects",
-      sec_other: "Other Projects",
-      sec_about: "About",
-      sec_contact: "Contact",
-      p1_tag: "Linux driver",
-      p1_label_story: "the story",
-      p1_story: `The MT7630E wifi chip lost mainline kernel support years ago, leaving a pile of old laptops with dead wifi. I picked up the abandoned out-of-tree driver, ported it against current kernel APIs, and fixed the DMA and interrupt handling that had rotted out.`,
-      p1_label_result: "the result",
-      p1_result: `It builds cleanly on modern kernels and a handful of people with old ThinkPads have wifi again. Small fix, but it's the kind of unglamorous maintenance that keeps hardware usable past its "official" lifespan.`,
-      p2_tag: "Audio DSP",
-      p2_label_story: "the story",
-      p2_story: `I wanted a distortion plugin that didn't just clip a waveform, but let you shape the harmonic character directly. That turned into a few months of reading DSP papers and re-deriving waveshaping math I only half-understood on the first pass.`,
-      p2_label_tech: "technical details",
-      p2_tech: `Runs multiple waveshaping stages with 4x oversampling to keep aliasing under control, a tone stage built from cascaded biquad filters, and a wet/dry path designed to stay phase-coherent. Written in C++ against the JUCE framework.`,
-      p3_tag: "Audio plugin",
-      p3_label_story: "the story",
-      p3_story: `My first real audio plugin, built before I understood most of the constraints that matter for real-time audio. It taught me why allocations on the audio thread are a bad idea, the hard way.`,
-      p3_label_reflect: "honest reflection",
-      p3_reflect: `It works, and people have used it, but the UI code is a mess and the CPU usage is higher than it should be. I keep it around unpolished on purpose — it's a useful reminder of where I started.`,
-      p4_tag: "Small web experiment",
-      p4_text: `A weekend build to drill musical scales in the browser. Nothing deep — just a fun break from systems work.`,
-      link_source: "source",
-      other_encounty: "Encounty",
-      link_github: "GitHub",
-      about_p1: `I'm a computer science student who spends most of my free time in C++ — usually somewhere between the hardware and the application, where things are either drivers or audio. I like projects that force me to actually understand what's happening underneath, rather than trusting a library to handle it.`,
-      about_p2: `Outside of code, I'm slowly getting better at admitting when a project didn't turn out the way I planned — most of the ones above are examples of that.`,
-      footer: "built with plain html & css · catppuccin mocha"
-    },
-    de: {
-      whoami: "~$ whoami",
-      role_cs: "Informatik",
-      role_cpp: "C++",
-      role_os: "Open Source",
-      role_sys: "Systeme",
-      intro: "Ich schreibe hardwarenahe Software — Treiber, Audio-DSP, gelegentlich ein Plugin. Meistens fängt es damit an, dass etwas nicht funktioniert hat und ich wissen wollte, warum.",
-      nav_github: "github",
-      nav_email: "e-mail",
-      nav_resume: "lebenslauf",
-      sec_projects: "Ausgewählte Projekte",
-      sec_other: "Weitere Projekte",
-      sec_about: "Über mich",
-      sec_contact: "Kontakt",
-      p1_tag: "Linux-Treiber",
-      p1_label_story: "die Geschichte",
-      p1_story: `Der MT7630E-WLAN-Chip verlor vor Jahren die Unterstützung im Mainline-Kernel, wodurch etliche alte Laptops ohne funktionierendes WLAN dastanden. Ich habe den verwaisten Out-of-Tree-Treiber übernommen, auf aktuelle Kernel-APIs portiert und das DMA- und Interrupt-Handling repariert, das mit der Zeit verrottet war.`,
-      p1_label_result: "das Ergebnis",
-      p1_result: `Er lässt sich sauber gegen aktuelle Kernel bauen, und ein paar Leute mit alten ThinkPads haben wieder WLAN. Ein kleiner Fix, aber genau die unglamouröse Wartungsarbeit, die Hardware über ihre "offizielle" Lebensdauer hinaus nutzbar hält.`,
-      p2_tag: "Audio-DSP",
-      p2_label_story: "die Geschichte",
-      p2_story: `Ich wollte ein Distortion-Plugin, das nicht einfach eine Wellenform kappt, sondern den harmonischen Charakter direkt formbar macht. Daraus wurden ein paar Monate DSP-Paper lesen und Waveshaping-Mathematik neu herleiten, die ich beim ersten Versuch nur halb verstanden hatte.`,
-      p2_label_tech: "technische Details",
-      p2_tech: `Mehrere Waveshaping-Stufen mit 4-facher Überabtastung gegen Aliasing, eine Klangregelstufe aus kaskadierten Biquad-Filtern und ein Wet/Dry-Pfad, der phasenkohärent bleibt. Geschrieben in C++ mit dem JUCE-Framework.`,
-      p3_tag: "Audio-Plugin",
-      p3_label_story: "die Geschichte",
-      p3_story: `Mein erstes richtiges Audio-Plugin, gebaut bevor ich die meisten Einschränkungen verstanden hatte, die bei Echtzeit-Audio wichtig sind. Es hat mir auf die harte Tour beigebracht, warum Allokationen im Audio-Thread eine schlechte Idee sind.`,
-      p3_label_reflect: "ehrliche Reflexion",
-      p3_reflect: `Es funktioniert, und Leute haben es benutzt, aber der UI-Code ist unaufgeräumt und die CPU-Last höher als sie sein sollte. Ich lasse es absichtlich unpoliert — eine nützliche Erinnerung daran, wo ich angefangen habe.`,
-      p4_tag: "Kleines Web-Experiment",
-      p4_text: `Ein Wochenendprojekt, um Tonleitern im Browser zu üben. Nichts Tiefgründiges — einfach eine kleine Abwechslung zur Systemprogrammierung.`,
-      link_source: "quellcode",
-      other_encounty: "Encounty",
-      link_github: "GitHub",
-      about_p1: `Ich studiere Informatik und verbringe die meiste Freizeit mit C++ — meist irgendwo zwischen Hardware und Anwendung, bei Treibern oder Audio. Ich mag Projekte, bei denen ich wirklich verstehen muss, was darunter passiert, statt einer Bibliothek blind zu vertrauen.`,
-      about_p2: `Abseits von Code werde ich langsam besser darin, zuzugeben, wenn ein Projekt nicht so gelaufen ist wie geplant — die meisten oben sind Beispiele dafür.`,
-      footer: "gebaut mit reinem html & css · catppuccin mocha"
-    }
-  };
+        langButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            applyLang(btn.dataset.lang);
+          });
+        });
 
-  (function () {
-    var root = document.documentElement;
-    var themeToggle = document.getElementById('themeToggle');
-    var langButtons = document.querySelectorAll('.lang-btn');
+        applyLang("de");
 
-    function applyTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      themeToggle.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
-    }
-
-    function applyLang(lang) {
-      var dict = i18n[lang] || i18n.en;
-      document.querySelectorAll('[data-i18n]').forEach(function (el) {
-        var key = el.getAttribute('data-i18n');
-        if (dict[key] !== undefined) el.textContent = dict[key];
-      });
-      root.setAttribute('lang', lang);
-      langButtons.forEach(function (btn) {
-        btn.setAttribute('aria-pressed', btn.dataset.lang === lang ? 'true' : 'false');
-      });
-    }
-
-    // Initial theme: follow system preference, default dark.
-    // Not persisted between visits on purpose (no localStorage) — see note below
-    // if you want the choice to stick across reloads on your deployed site.
-    var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    applyTheme(prefersLight ? 'light' : 'dark');
-
-    themeToggle.addEventListener('click', function () {
-      var current = root.getAttribute('data-theme');
-      applyTheme(current === 'light' ? 'dark' : 'light');
-    });
-
-    langButtons.forEach(function (btn) {
-      btn.addEventListener('click', function () { applyLang(btn.dataset.lang); });
-    });
-
-    applyLang('de');
-
-    // To persist theme/language across page loads once this is on GitHub Pages,
-    // you can swap the two lines above for:
-    //   applyTheme(localStorage.getItem('theme') || (prefersLight ? 'light' : 'dark'));
-    //   applyLang(localStorage.getItem('lang') || 'de');
-    // and add localStorage.setItem(...) calls inside applyTheme/applyLang.
-  })();
-</script>
-
-</body>
+        // To persist theme/language across page loads once this is on GitHub Pages,
+        // you can swap the two lines above for:
+        //   applyTheme(localStorage.getItem('theme') || (prefersLight ? 'light' : 'dark'));
+        //   applyLang(localStorage.getItem('lang') || 'de');
+        // and add localStorage.setItem(...) calls inside applyTheme/applyLang.
+      })();
+    </script>
+  </body>
 </html>
