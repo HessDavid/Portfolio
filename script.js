@@ -54,7 +54,7 @@ var i18n = {
     about_p1: `I'm a Computer Science student at Mannheim University of Applied Sciences, interested in building software across different areas. I like exploring and learning about new technologies and niches. Some of the things I've become interested in include web development, Linux desktop software, audio DSP, DevOps, and AI.`,
     about_p2: `I started programming because I wanted to create things myself. I learn mostly by building things, experimenting with unfamiliar technologies, and figuring things out along the way. I'm very excited about the world of open source software because there are so many interesting and innovative projects out there, and I enjoy being able to participate in improving them.`,
     about_p3: `Outside of software, I'm interested in music, gardening, and traditional bread making.`,
-    footer: "built with plain html & css · catppuccin mocha",
+    footer: "Last updated on",
   },
   de: {
     whoami: "~$ whoami",
@@ -111,7 +111,7 @@ var i18n = {
     about_p1: `Ich studiere Informatik an der Hochschule Mannheim und interessiere mich dafür, Software in verschiedenen Bereichen zu entwickeln. Dabei probiere ich gerne neue Technologien und Nischen aus und lerne ständig Neues dazu. Zu den Bereichen, mit denen ich mich bisher beschäftigt habe, gehören unter anderem Webentwicklung, Linux-Desktop-Software, Audio-DSP, DevOps und KI.`,
     about_p2: `Ich habe mit dem Programmieren angefangen, weil ich Dinge selbst entwickeln wollte. Am meisten lerne ich, indem ich Dinge baue, mit mir unbekannten Technologien experimentiere und mich dabei in neue Themen einarbeite. Besonders spannend finde ich die Welt der Open-Source-Software, weil es dort so viele interessante und innovative Projekte gibt und ich selbst die Möglichkeit habe, zu ihrer Weiterentwicklung beizutragen.`,
     about_p3: `Abseits von Software interessiere ich mich für Musik, Gartenarbeit und traditionelles Brotbacken.`,
-    footer: "gebaut mit reinem html & css · catppuccin mocha",
+    footer: "Zuletzt aktualisiert am",
   },
 };
 
@@ -252,4 +252,48 @@ var i18n = {
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") close();
   });
+})();
+
+(function () {
+  var root = document.documentElement;
+  var footer = document.querySelector("footer");
+  if (!footer) return;
+
+  // Fetch the timestamp of the latest commit in the Portfolio repo and show it
+  // in the footer, localized to the current page language.
+  var lastUpdated = null;
+  var format = new Intl.DateTimeFormat(root.lang, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  function render() {
+    var dict = i18n[root.lang] || i18n.en;
+    if (!lastUpdated) return;
+    footer.textContent = dict.footer + " " + format.format(lastUpdated);
+  }
+
+  // Re-render when the language switches, so the date uses the new locale.
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      if (m.attributeName === "lang") render();
+    });
+  });
+  observer.observe(root, { attributes: true, attributeFilter: ["lang"] });
+
+  fetch("https://api.github.com/repos/HessDavid/Portfolio/commits?per_page=1")
+    .then(function (res) {
+      if (!res.ok) throw new Error(res.status);
+      return res.json();
+    })
+    .then(function (commits) {
+      var date = commits[0] && commits[0].commit && commits[0].commit.committer.date;
+      if (!date) throw new Error("missing commit date");
+      lastUpdated = new Date(date);
+      render();
+    })
+    .catch(function () {
+      // Keep the footer empty rather than showing a wrong or stale date.
+    });
 })();
