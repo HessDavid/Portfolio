@@ -137,7 +137,14 @@ a {
 
 .lang-btn[aria-pressed="true"] {
   color: var(--base);
+}
+
+.lang-btn[data-lang="de"][aria-pressed="true"] {
   background: linear-gradient(45deg, var(--blue), var(--green));
+}
+
+.lang-btn[data-lang="en"][aria-pressed="true"] {
+  background: linear-gradient(45deg, var(--mauve), var(--blue));
 }
 
 .lang-btn:not([aria-pressed="true"]):hover {
