@@ -51,8 +51,9 @@ var i18n = {
     link_github: "GitHub",
     aria_zoom: "Enlarge image",
     aria_close: "Close",
-    about_p1: `I'm a computer science student who spends most of my free time in C++ — usually somewhere between the hardware and the application, where things are either drivers or audio. I like projects that force me to actually understand what's happening underneath, rather than trusting a library to handle it.`,
-    about_p2: `Outside of code, I'm slowly getting better at admitting when a project didn't turn out the way I planned — most of the ones above are examples of that.`,
+    about_p1: `I'm a Computer Science student at Mannheim University of Applied Sciences, interested in building software across different areas. I like exploring and learning about new technologies and niches. Some of the things I've become interested in include web development, Linux desktop software, audio DSP, DevOps, and AI.`,
+    about_p2: `I started programming because I wanted to create things myself. I learn mostly by building things, experimenting with unfamiliar technologies, and figuring things out along the way. I'm very excited about the world of open source software because there are so many interesting and innovative projects out there, and I enjoy being able to participate in improving them.`,
+    about_p3: `Outside of software, I'm interested in music, gardening, and traditional bread making.`,
     footer: "built with plain html & css · catppuccin mocha",
   },
   de: {
@@ -107,8 +108,9 @@ var i18n = {
     link_github: "GitHub",
     aria_zoom: "Bild vergrößern",
     aria_close: "Schließen",
-    about_p1: `Ich studiere Informatik und verbringe die meiste Freizeit mit C++ — meist irgendwo zwischen Hardware und Anwendung, bei Treibern oder Audio. Ich mag Projekte, bei denen ich wirklich verstehen muss, was darunter passiert, statt einer Bibliothek blind zu vertrauen.`,
-    about_p2: `Abseits von Code werde ich langsam besser darin, zuzugeben, wenn ein Projekt nicht so gelaufen ist wie geplant — die meisten oben sind Beispiele dafür.`,
+    about_p1: `Ich studiere Informatik an der Hochschule Mannheim und interessiere mich dafür, Software in verschiedenen Bereichen zu entwickeln. Dabei probiere ich gerne neue Technologien und Nischen aus und lerne ständig Neues dazu. Zu den Bereichen, mit denen ich mich bisher beschäftigt habe, gehören unter anderem Webentwicklung, Linux-Desktop-Software, Audio-DSP, DevOps und KI.`,
+    about_p2: `Ich habe mit dem Programmieren angefangen, weil ich Dinge selbst entwickeln wollte. Am meisten lerne ich, indem ich Dinge baue, mit mir unbekannten Technologien experimentiere und mich dabei in neue Themen einarbeite. Besonders spannend finde ich die Welt der Open-Source-Software, weil es dort so viele interessante und innovative Projekte gibt und ich selbst die Möglichkeit habe, zu ihrer Weiterentwicklung beizutragen.`,
+    about_p3: `Abseits von Software interessiere ich mich für Musik, Gartenarbeit und traditionelles Brotbacken.`,
     footer: "gebaut mit reinem html & css · catppuccin mocha",
   },
 };

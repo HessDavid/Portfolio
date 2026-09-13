@@ -18,6 +18,9 @@
   --teal: #94e2d5;
   --sky: #89dceb;
   --yellow: #f9e2af;
+  /* frosted glass over photos, derived from palette (Mocha) */
+  --glass: color-mix(in srgb, var(--crust) 60%, transparent);
+  --glass-btn: color-mix(in srgb, var(--mantle) 70%, transparent);
 }
 
 [data-theme="light"] {
@@ -40,6 +43,9 @@
   --teal: #179299;
   --sky: #04a5e5;
   --yellow: #df8e1d;
+  /* frosted glass over photos, derived from palette (Latte) */
+  --glass: color-mix(in srgb, var(--mantle) 60%, transparent);
+  --glass-btn: color-mix(in srgb, var(--crust) 80%, transparent);
 }
 
 * {
@@ -431,7 +437,7 @@ body.lightbox-open {
   justify-content: center;
   border: 0px solid var(--surface0);
   border-radius: 8px;
-  background: rgba(12, 12, 20, 0.6);
+  background: var(--glass);
   -webkit-backdrop-filter: blur(10px) saturate(1.15);
   backdrop-filter: blur(10px) saturate(1.15);
   color: var(--subtext0);
@@ -462,7 +468,7 @@ body.lightbox-open {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(12, 12, 20, 0.6);
+  background: var(--glass);
   -webkit-backdrop-filter: blur(10px) saturate(1.15);
   backdrop-filter: blur(10px) saturate(1.15);
   opacity: 0;
@@ -518,7 +524,7 @@ body.lightbox-open {
   justify-content: center;
   border: 0px solid var(--surface0);
   border-radius: 8px;
-  background: color-mix(in srgb, var(--mantle) 70%, transparent);
+  background: var(--glass-btn);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   color: var(--subtext0);
