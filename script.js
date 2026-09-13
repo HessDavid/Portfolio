@@ -297,3 +297,42 @@ var i18n = {
       // Keep the footer empty rather than showing a wrong or stale date.
     });
 })();
+
+(function () {
+  var imgs = Array.prototype.slice.call(
+    document.querySelectorAll(".project-preview img")
+  );
+  if (!imgs.length) return;
+
+  var srcs = imgs
+    .map(function (img) {
+      return new URL(img.currentSrc || img.src, location.href).href;
+    })
+    .filter(Boolean);
+
+  var started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    // If the user prefers to save data, never fetch ahead of what is visible.
+    if (navigator.connection && navigator.connection.saveData) return;
+    // Warm the browser cache in the background, one image at a time, so the
+    // previews don't arrive in a burst of parallel requests. Expanding a
+    // project afterwards then shows its image straight from the cache.
+    srcs.forEach(function (src, i) {
+      setTimeout(function () {
+        var probe = new Image();
+        probe.src = src;
+      }, 500 * i);
+    });
+  }
+
+  if (document.readyState === "complete") {
+    start();
+  } else {
+    window.addEventListener("load", start, { once: true });
+    // Lazy images are not counted toward the page "load" event, so make
+    // sure we still start soon even if "load" is held up by a slow resource.
+    setTimeout(start, 5000);
+  }
+})();
