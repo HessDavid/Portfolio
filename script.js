@@ -336,3 +336,17 @@ var i18n = {
     setTimeout(start, 5000);
   }
 })();
+
+(function () {
+  // Single-open accordion: opening one project closes the others.
+  document.querySelectorAll(".project details").forEach(function (details) {
+    details.addEventListener("toggle", function () {
+      if (!details.open) return;
+      document
+        .querySelectorAll(".project details:open")
+        .forEach(function (other) {
+          if (other !== details) other.open = false;
+        });
+    });
+  });
+})();
